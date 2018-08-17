@@ -4,12 +4,13 @@ adapter_khz     1000
 #source [find interface/ftdi/olimex-arm-usb-tiny-h.cfg]
 
 interface ftdi
-ftdi_device_desc "Dual RS232-HS"
-ftdi_vid_pid 0x0403 0x6010
+ftdi_device_desc "Olimex OpenOCD JTAG ARM-USB-TINY-H"
+ftdi_vid_pid 0x15ba 0x002a
 
-fti_layout init 0x000d 0x001b
-ft_i_layout8signal nSdRST -oe _ x0020 -datd 0x0020
-
+ftdi_layout_init 0x0808 0x0a1b
+ftdi_layout_signal nSRST -oe 0x0200
+ftdi_layout_signal nTRST -data 0x0100 -oe 0x0100
+ftdi_layout_signal LED -data 0x0800
 #
 
 set _CHIPNAME riscv

@@ -21,7 +21,6 @@ module tb_top();
 
   wire [`E200_XLEN-1:0] x3 = `EXU.u_e200_exu_regfile.rf_r[3];
   wire [`E200_PC_SIZE-1:0] pc = `EXU.u_e200_exu_commit.alu_cmt_i_pc;
-  wire [`E200_PC_SIZE-1:0] pc_vld = `EXU.u_e200_exu_commit.alu_cmt_i_valid;
 
   reg [31:0] pc_write_to_host_cnt;
   reg [31:0] pc_write_to_host_cycle;
@@ -36,7 +35,7 @@ module tb_top();
         pc_write_to_host_flag <= 1'b0;
         pc_write_to_host_cycle <= 32'b0;
     end
-    else if (pc_vld & (pc == `PC_WRITE_TOHOST)) begin
+    else if (pc == `PC_WRITE_TOHOST) begin
         pc_write_to_host_cnt <= pc_write_to_host_cnt + 1'b1;
         pc_write_to_host_flag <= 1'b1;
         if (pc_write_to_host_flag == 1'b0) begin
@@ -125,7 +124,7 @@ module tb_top();
     #100
     @(pc == `PC_AFTER_SETMTVEC ) // Wait the program goes out the reset_vector program
     forever begin
-      repeat ($urandom_range(1, 1000)) @(posedge clk) tb_ext_irq = 1'b0; // Wait random times
+      repeat ($urandom_range(1, 10000)) @(posedge clk) tb_ext_irq = 1'b0; // Wait random times
       tb_ext_irq = 1'b1; // assert the irq
       @((pc == `PC_EXT_IRQ_BEFOR_MRET)) // Wait the program run into the IRQ handler by check PC values
       tb_ext_irq = 1'b0;
@@ -139,7 +138,7 @@ module tb_top();
     #100
     @(pc == `PC_AFTER_SETMTVEC ) // Wait the program goes out the reset_vector program
     forever begin
-      repeat ($urandom_range(1, 1000)) @(posedge clk) tb_sft_irq = 1'b0; // Wait random times
+      repeat ($urandom_range(1, 10000)) @(posedge clk) tb_sft_irq = 1'b0; // Wait random times
       tb_sft_irq = 1'b1; // assert the irq
       @((pc == `PC_SFT_IRQ_BEFOR_MRET)) // Wait the program run into the IRQ handler by check PC values
       tb_sft_irq = 1'b0;
@@ -153,7 +152,7 @@ module tb_top();
     #100
     @(pc == `PC_AFTER_SETMTVEC ) // Wait the program goes out the reset_vector program
     forever begin
-      repeat ($urandom_range(1, 1000)) @(posedge clk) tb_tmr_irq = 1'b0; // Wait random times
+      repeat ($urandom_range(1, 10000)) @(posedge clk) tb_tmr_irq = 1'b0; // Wait random times
       tb_tmr_irq = 1'b1; // assert the irq
       @((pc == `PC_TMR_IRQ_BEFOR_MRET)) // Wait the program run into the IRQ handler by check PC values
       tb_tmr_irq = 1'b0;

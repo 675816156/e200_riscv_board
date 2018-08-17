@@ -214,6 +214,7 @@ dasm: software $(RISCV_OBJDUMP)
 OPENOCD_UPLOAD = bsp/tools/openocd_upload.sh
 OPENOCDCFG ?= bsp/env/$(BOARD)/openocd.cfg
 OPENOCDARGS += -f $(OPENOCDCFG)
+OPENOCDARGS += -d2
 
 GDB_UPLOAD_ARGS ?= --batch
 

@@ -48,7 +48,7 @@ INCLUDES += -I$(PLATFORM_DIR)
 TOOL_DIR = $(BSP_BASE)/../toolchain/bin
 
 LDFLAGS += -T $(LINKER_SCRIPT) -nostartfiles -Wl,--gc-sections -Wl,--wrap=scanf -Wl,--wrap=malloc -Wl,--wrap=printf  -Wl,--check-sections
-
+# LDFLAGS += -Map $(TARGET).map
 LDFLAGS += -L$(ENV_DIR)
 
 ASM_OBJS := $(ASM_SRCS:.S=.o)

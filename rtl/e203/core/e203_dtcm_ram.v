@@ -54,7 +54,9 @@ module e203_dtcm_ram(
 );
 
   sirv_gnrl_ram #(
-    .FORCE_X2ZERO(1),//Always force X to zeros
+      `ifndef E203_HAS_ECC//{
+    .FORCE_X2ZERO(0),
+      `endif//}
     .DP(`E203_DTCM_RAM_DP),
     .DW(`E203_DTCM_RAM_DW),
     .MW(`E203_DTCM_RAM_MW),

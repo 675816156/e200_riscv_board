@@ -8,6 +8,7 @@
 #include "encoding.h"
 #include <unistd.h>
 #include "stdatomic.h"
+#include "util.h"
 
 // Structures for registering different interrupt handlers
 // for different parts of the application.
@@ -103,7 +104,7 @@ void handle_m_time_interrupt(){
   uint64_t then = now + RTC_FREQ / 2;
   *mtimecmp = then;
   //set CLINT_MTIMECMP.
-  GPIO_REG(GPIO_OUTPUT_VAL) ^= ((0x1 << RED_LED_OFFSET));
+  GPIO_REG(GPIO_OUTPUT_VAL) ^=  GPIO_REG(GPIO_OUTPUT_VAL);
   // Re-enable the timer interrupt.
   set_csr(mie, MIP_MTIP);
   // printf("%s\r\n",__func__);
@@ -138,12 +139,25 @@ void set_int (){
 
 int main(int argc, char **argv)
 {
-  GPIO_REG(GPIO_OUTPUT_EN) |= ((0x1<< RED_LED_OFFSET) | (0x1<< GREEN_LED_OFFSET) | (0x1<< BLUE_LED_OFFSET)); //we should close blue & green led
-  GPIO_REG(GPIO_OUTPUT_VAL) |= ((0x1<< RED_LED_OFFSET) | (0x1<< GREEN_LED_OFFSET) | (0x1<< BLUE_LED_OFFSET));  //all led is closed
-  //use mtip to drive led
-  set_int();
+  uint8_t a=0;
+
   printf("%s\r\n",instructions_msg_sirv);
+  GPIO_REG(GPIO_OUTPUT_EN) = 0xffffffff; 
+  GPIO_REG(GPIO_OUTPUT_VAL) = 0xffffffff;
+    // Enable the Machine-Timer bit in MIE
+    set_csr(mie, MIP_MTIP);
   while(1){
+    if(a)
+    {
+      a = 0;
+      GPIO_REG(GPIO_OUTPUT_VAL) = 0xffffffff;
+    }
+    else
+    {
+      a = 1;
+      GPIO_REG(GPIO_OUTPUT_VAL) = 0x00000000;
+    }
+    delay_ms(500);
   }
   return 0;
 }
